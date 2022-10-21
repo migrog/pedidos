@@ -1,0 +1,84 @@
+<div class="container-fluid">
+    <section class="mb-2">
+        <div class="row justify-content-end">
+            <div class="col">
+                <button type="button" class="btn btn-outline-primary mr-1" role="button" (click)="nuevo()" placement="top" ngbTooltip="Nuevo cliente"><i class="fa fa-box mr-1"></i> Nuevo</button>
+            </div>
+        </div>
+    </section>
+    <div class="card">
+
+        <div class="card-header">
+            Lista de clientes
+        </div>
+        <div class="card-body">
+            <section class="mb-2">
+                <form [formGroup]="searchModel" (ngSubmit)="search()">
+                    <div class="row">
+                        <div class="col col-6">
+                            <div class="input-group">
+                                <input type="search" formControlName="nombre" class="form-control rounded" aria-label="Search" aria-describedby="search-addon" />
+                                <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
+            <section class="mb-2">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>NOMBRE</th>
+                                <th>ACCIONES</th>
+
+                            </tr>
+                        </thead>
+                        <tbody style="position:relative">
+                            <ng-container *ngIf="loading; else Cargado">
+                                <tr>
+                                    <td colspan="11">
+                                        <ngx-spinner bdOpacity=0.7 bdColor="grey" size="medium" color="#fff" type="ball-clip-rotate-pulse" [fullScreen]="false" class="loading-spinner">
+                                        </ngx-spinner>
+                                    </td>
+                                </tr>
+                            </ng-container>
+
+                            <ng-template #Cargado>
+                                <ng-container *ngIf="clientes.length> 0 ; else Tpl0">
+                                    <tr [class.active]="(selectedRow == i && selectedPage == page)" *ngFor="let cliente of clientes; let i= index" (click)="setClickedRow(i)">
+                                        <td class="align-middle">{{cliente.row}}</td>
+                                        <td class="align-middle">{{cliente.nombre}}</td>
+                                        <td class="text-left">
+                                            <button type="button" (click)="editar(cliente.id)" class="btn btn-outline-info btn-sm mr-2 text-dark" placement="top" ngbTooltip="Editar"><i class="fa fa-edit fa-fw"></i></button>
+                                            <button type="button" (click)="eliminar(cliente.id)" class="btn btn-outline-danger btn-sm mr-2" placement="top" ngbTooltip="Eliminar"><i class="fa fa-trash fa-fw"></i></button>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </ng-template>
+                            <ng-template #Tpl0>
+                                <tr>
+                                    <td colspan="11" class="lead text-center">Sin resultados</td>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>
+                        <strong>Mostrados: </strong>{{mostrados}}/{{result == undefined ? 0 : result.totalRows}}
+                      </label>
+                    </div>
+                    <div class="col-5">
+                        <ngb-pagination *ngIf="clientes.length> 0" class="d-flex justify-content-center" [collectionSize]="result == undefined ? 0 : result.totalRows" [(page)]="page" [pageSize]="pageSize" (pageChange)="paginar()" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
+                    </div>
+                    <div class="col">
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</div>

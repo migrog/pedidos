@@ -1,0 +1,114 @@
+<div class="container-fluid">
+    <div style="position:relative">
+        <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" [fullScreen]="false" type="square-jelly-box" *ngIf="loading">
+        </ngx-spinner>
+        <form [formGroup]="pedidoGroup" (ngSubmit)="guardar()" [class.cross-validation-error]="pedidoGroup.invalid" novalidate>
+            <section class="mb-2">
+                <fieldset>
+                    <div class="row">
+                        <div class="col col-6">
+
+                            <div class="form-group mb-2">
+                                <label class="form-label">Cliente</label>
+                                <input id="typeahead-http" type="text" class="form-control" [class.is-invalid]="searchClienteFailed || (clienteSelected == null)" [ngbTooltip]="clienteSelected == null ? tipCliente:null" [(ngModel)]="cliente" (ngModelChange)="onClienteChange()" (blur)="onClienteBlur()"
+                                    [ngModelOptions]="{standalone: true}" [ngbTypeahead]="searchCliente" [inputFormatter]="formatter" [resultFormatter]="formatter" placeholder="Escriba el nombre del cliente" />
+                                <small *ngIf="searchingCliente" class="form-text text-muted">buscando...</small>
+                                <div class="invalid-feedback" *ngIf="searchClienteFailed">Lo sentimos, no se pudieron cargar los resultados.</div>
+                                <ng-template #tipCliente>
+                                    <div *ngIf="clienteSelected == null">
+                                        El campo es requerido
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                        <div class="col col-3">
+                            <div class="form-group mb-2">
+                                <label class="form-label">Moneda</label>
+                                <select class="form-select" formControlName="monedaEnum">
+                              <option value="1" selected>PEN</option>
+                              <option value="2">USD</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="col col-3">
+                            <div class="form-group mb-2">
+                                <label class="form-label">Fecha emisión</label>
+                                <input type="date" class="form-control" formControlName="fechaEmision" [class.input-error]="f.fechaEmision.errors" [ngbTooltip]="f.fechaEmision.errors ? tipFechaEmision:null">
+                                <ng-template #tipFechaEmision>
+                                    <div *ngIf="f.fechaEmision.errors?.required">
+                                        El campo es requerido
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </section>
+            <section class="mb-2">
+                <section class="mb-2">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>ITEM</th>
+                                    <th>CANTIDAD</th>
+                                    <th>PRECIO UNITARIO</th>
+                                    <th>TOTAL</th>
+                                    <th class="text-left">ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody style="position:relative">
+                                <ng-container *ngIf="loading_detalle; else Loaded">
+                                    <tr>
+                                        <td class="loading" colspan="11">
+                                            <ngx-spinner bdOpacity=0.7 bdColor="grey" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="false" class="loading-spinner">
+                                            </ngx-spinner>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+
+                                <ng-template #Loaded>
+                                    <ng-container *ngIf="detalle.length> 0 ; else Tpl0">
+                                        <tr *ngFor="let item of detalle; let i= index">
+                                            <td>{{i+ 1}}</td>
+                                            <td>{{item.nombreProducto}}</td>
+                                            <td>{{item.cantidad}}</td>
+                                            <td>{{item.precioUnitario}}</td>
+                                            <td>{{item.total}}</td>
+                                            <td class="text-left">
+                                                <button type="button" (click)="eliminarDetalle(i)" class="btn btn-outline-danger btn-sm mr-1" placement="top" ngbTooltip="Quitar"><i class="fa fa-trash fa-fw"></i></button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-template>
+                                <ng-template #Tpl0>
+                                    <tr>
+                                        <td colspan="11" class="lead text-center">Aun no tienes productos agregados</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </section>
+            <section>
+                <div class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-outline-primary mr-1" role="button" (click)="agregarProducto()"> +Agregar producto</button>
+                    </div>
+                </div>
+            </section>
+            <section *ngIf="detalle.length> 0">
+                <div class="row">
+                    <div class="col-8"></div>
+                    <div class="col-4">
+                        <h3 class="text-right"><b>TOTAL:</b> {{ total }}</h3>
+                        <button type="submit" class="btn btn-primary" [attr.disabled]="pedidoGroup.invalid || !clienteSelected ? 'disabled' : null"> Guardar </button>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+
+</div>

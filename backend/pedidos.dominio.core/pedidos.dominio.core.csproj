@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\pedidos.dominio.entidades\pedidos.dominio.entidades.csproj" />
+    <ProjectReference Include="..\pedidos.infra.data\pedidos.infra.data.csproj" />
+  </ItemGroup>
+
+</Project>

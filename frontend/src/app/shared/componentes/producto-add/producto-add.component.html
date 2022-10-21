@@ -1,0 +1,55 @@
+<div class="container-fluid">
+    <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" [fullScreen]="false" type="square-jelly-box" *ngIf="loading">
+    </ngx-spinner>
+    <div style="position:relative">
+        <form [formGroup]="productoAddGroup" (ngSubmit)="agregar()" [class.cross-validation-error]="true" novalidate>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="close()"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group mb-2">
+                    <label class="form-label">Producto</label>
+                    <input id="typeahead-http" type="text" class="form-control" [class.is-invalid]="searchProductoFailed" [(ngModel)]="producto" (ngModelChange)="onProductoChange()" (blur)="onProductoBlur()" [ngModelOptions]="{standalone: true}" [ngbTypeahead]="searchProducto"
+                        [inputFormatter]="formatter" [resultFormatter]="formatter" placeholder="Escriba el nombre del producto" />
+                    <small *ngIf="searchingProducto" class="form-text text-muted">buscando...</small>
+                    <div class="invalid-feedback" *ngIf="searchProductoFailed">Lo sentimos, no se pudieron cargar los resultados.</div>
+                </div>
+                <div class="form-group mb-2">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" class="form-control" placeholder="Ingrese cantidad" [class.input-error]="f.cantidad.errors" [ngbTooltip]="f.cantidad.errors ? tipCantidad:null" formControlName="cantidad">
+                    <ng-template #tipCantidad>
+                        <div *ngIf="f.cantidad.errors?.required">
+                            El campo es requerido
+                        </div>
+                        <div *ngIf="f.cantidad.errors?.min">
+                            No se acepta valores negativos
+                        </div>
+                    </ng-template>
+                </div>
+                <div class="form-group mb-2">
+                    <label class="form-label">Precio Unitario</label>
+                    <input type="number" class="form-control" placeholder="Ingrese precio" [class.input-error]="f.precioUnitario.errors" [ngbTooltip]="f.precioUnitario.errors ? tipPrecioUnitario:null" formControlName="precioUnitario">
+                    <ng-template #tipPrecioUnitario>
+                        <div *ngIf="f.precioUnitario.errors?.required">
+                            El campo es requerido
+                        </div>
+                        <div *ngIf="f.precioUnitario.errors?.min">
+                            No se acepta valores negativos
+                        </div>
+                    </ng-template>
+                </div>
+                <div class="form-group mb-2" *ngIf="producto?.moneda">
+                    <label class="form-label">Moneda</label>
+                    <input type="text" class="form-control" formControlName="moneda" readonly>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-dark" [attr.disabled]="f.idProducto.value ? null : 'disabled'">Agregar</button>
+            </div>
+        </form>
+    </div>
+</div>
