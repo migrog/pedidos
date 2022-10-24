@@ -197,7 +197,9 @@ export class PedidoNewComponent implements OnInit {
         next: (v) =>{
           console.log(v)
           this.loading = false
-          this.alertaService.alertOk("Se guardó con éxito")
+          this.alertaService.alertOk("Se guardó con éxito","",()=>{
+            this.router.navigate(['/pedidos'], { replaceUrl: true });
+          })
         },
         error: (e) =>{
           console.error(e)
